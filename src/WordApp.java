@@ -82,10 +82,10 @@ public class WordApp {
 	    
 	    JPanel b = new JPanel();
         b.setLayout(new BoxLayout(b, BoxLayout.LINE_AXIS)); 
-	   	JButton startB = new JButton("Start");;
+	   	JButton resetB = new JButton("Reset");
 		
 			// add the listener to the jbutton to handle the "pressed" event
-			startB.addActionListener(new ActionListener()
+		resetB.addActionListener(new ActionListener()
 		    {
 		      public void actionPerformed(ActionEvent e)
 		      {
@@ -93,18 +93,43 @@ public class WordApp {
 		    	  textEntry.requestFocus();  //return focus to the text entry field
 		      }
 		    });
-		JButton endB = new JButton("End");;
+
+		JButton pauseB = new JButton("Pause");
 			
 				// add the listener to the jbutton to handle the "pressed" event
-				endB.addActionListener(new ActionListener()
+		pauseB.addActionListener(new ActionListener()
 			    {
 			      public void actionPerformed(ActionEvent e)
 			      {
 			    	  //[snip]
 			      }
 			    });
-		
-		b.add(startB);
+
+		JButton playB = new JButton("Play");
+
+		// add the listener to the jbutton to handle the "pressed" event
+		playB.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				//[snip]
+			}
+		});
+
+		JButton endB = new JButton("End");
+
+		// add the listener to the jbutton to handle the "pressed" event
+		endB.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				//[snip]
+			}
+		});
+
+		b.add(resetB);
+		b.add(pauseB);
+		b.add(playB);
 		b.add(endB);
 		
 		g.add(b);
@@ -149,7 +174,7 @@ public class WordApp {
      * @param args
      */
 	public static void main(String[] args) {
-	    String[] argsT = {"5", "2", "example_dict.txt"};
+	    String[] argsT = {"10", "5", "example_dict.txt"};
 		//deal with command line arguments
 		totalWords=Integer.parseInt(argsT[0]);  //total words to fall
 		noWords=Integer.parseInt(argsT[1]); // total words falling at any point
