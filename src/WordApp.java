@@ -33,7 +33,7 @@ public class WordApp {
 
 
     /**
-     *
+     * Setup GUI screen
      * @param frameX
      * @param frameY
      * @param yLimit
@@ -144,6 +144,10 @@ public class WordApp {
 
 	}
 
+    /**
+     * Main Method
+     * @param args
+     */
 	public static void main(String[] args) {
 	    String[] argsT = {"5", "2", "example_dict.txt"};
 		//deal with command line arguments

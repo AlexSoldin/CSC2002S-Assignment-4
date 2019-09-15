@@ -1,5 +1,9 @@
 public class WordRecord {
-	private String text;
+
+    /**
+     * Global Variables
+     */
+    private String text;
 	private  int x;
 	private int y;
 	private int maxY;
@@ -10,9 +14,10 @@ public class WordRecord {
 	private static int minWait=100;
 
 	public static WordDictionary dict;
-	
 
-	
+    /**
+     * Default Constructor
+     */
 	WordRecord() {
 		text="";
 		x=0;
@@ -21,19 +26,28 @@ public class WordRecord {
 		dropped=false;
 		fallingSpeed=(int)(Math.random() * (maxWait-minWait)+minWait); 
 	}
-	
+
+    /**
+     * Parameterised Constructor 1
+     */
 	WordRecord(String text) {
 		this();
 		this.text=text;
 	}
-	
+
+    /**
+     * Parameterised Constructor 2
+     */
 	WordRecord(String text,int x, int maxY) {
 		this(text);
 		this.x=x;
 		this.maxY=maxY;
 	}
-	
-// all getters and setters must be synchronized
+
+    /**
+     * Accessor and Mutator Methods
+     * All getters and setters must be synchronized
+     */
 	public synchronized  void setY(int y) {
 		if (y>maxY) {
 			y=maxY;
@@ -70,10 +84,17 @@ public class WordRecord {
 		setY(y);
 		setX(x);
 	}
+
+    /**
+     * Reset Y-position
+     */
 	public synchronized void resetPos() {
 		setY(0);
 	}
 
+    /**
+     *
+     */
 	public synchronized void resetWord() {
 		resetPos();
 		text=dict.getNewWord();
@@ -82,7 +103,12 @@ public class WordRecord {
 		//System.out.println(getWord() + " falling speed = " + getSpeed());
 
 	}
-	
+
+    /**
+     * Checking that the typed word is equal to the word from the dictionary
+     * @param typedText
+     * @return boolean true (correct match) or false (incorrect match)
+     */
 	public synchronized boolean matchWord(String typedText) {
 		//System.out.println("Matching against: "+text);
 		if (typedText.equals(this.text)) {
@@ -92,12 +118,19 @@ public class WordRecord {
 		else
 			return false;
 	}
-	
 
+    /**
+     * Dropping the word in the Y-direction according to the magnitude of increment
+     * @param inc number by which the word should fall
+     */
 	public synchronized  void drop(int inc) {
 		setY(y+inc);
 	}
-	
+
+    /**
+     * Declaring that the dictionary word has fallen and therefore can't be caught any longer
+     * @return boolean true (can't be caught) or false (can be caught)
+     */
 	public synchronized  boolean dropped() {
 		return dropped;
 	}
