@@ -118,8 +118,13 @@ public class WordApp {
 		
 	}
 
-	
-public static String[] getDictFromFile(String filename) {
+    /**
+     * Reads in dictionary from input file
+     * If there is an error with input file, default dictionary will be used
+     * @param filename
+     * @return
+     */
+    public static String[] getDictFromFile(String filename) {
 		String [] dictStr = null;
 		try {
 			Scanner dictReader = new Scanner(new FileInputStream(filename));
