@@ -9,6 +9,7 @@ import java.io.IOException;
 
 import java.util.Scanner;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 //model is separate from the view.
 
 public class WordApp {
@@ -30,6 +31,7 @@ public class WordApp {
 	static 	Score score = new Score();
 
 	static WordPanel w;
+	static FallingWords fw;
 
 
     /**
@@ -66,8 +68,8 @@ public class WordApp {
 	    //[snip]
   
 	    final JTextField textEntry = new JTextField("",20);
-	   textEntry.addActionListener(new ActionListener()
-	    {
+	    textEntry.addActionListener(new ActionListener()
+		{
 	      public void actionPerformed(ActionEvent evt) {
 	          String text = textEntry.getText();
 	          //[snip]
@@ -76,34 +78,35 @@ public class WordApp {
 	      }
 	    });
 	   
-	   txt.add(textEntry);
-	   txt.setMaximumSize( txt.getPreferredSize() );
-	   g.add(txt);
+	    txt.add(textEntry);
+	    txt.setMaximumSize( txt.getPreferredSize() );
+	    g.add(txt);
 	    
-	    JPanel b = new JPanel();
-        b.setLayout(new BoxLayout(b, BoxLayout.LINE_AXIS)); 
-	   	JButton resetB = new JButton("Reset");
-		
-			// add the listener to the jbutton to handle the "pressed" event
+		JPanel b = new JPanel();
+		b.setLayout(new BoxLayout(b, BoxLayout.LINE_AXIS));
+		JButton resetB = new JButton("Reset");
+
+		// add the listener to the jbutton to handle the "pressed" event
 		resetB.addActionListener(new ActionListener()
-		    {
-		      public void actionPerformed(ActionEvent e)
-		      {
-		    	  //[snip]
-		    	  textEntry.requestFocus();  //return focus to the text entry field
-		      }
-		    });
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				textEntry.requestFocus();  //return focus to the text entry field
+				done = true;
+				startFallingWords(words);
+			}
+		});
 
 		JButton pauseB = new JButton("Pause");
-			
-				// add the listener to the jbutton to handle the "pressed" event
+
+		// add the listener to the jbutton to handle the "pressed" event
 		pauseB.addActionListener(new ActionListener()
-			    {
-			      public void actionPerformed(ActionEvent e)
-			      {
-			    	  //[snip]
-			      }
-			    });
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				fw.paused.set(true);
+			}
+		});
 
 		JButton playB = new JButton("Play");
 
@@ -112,7 +115,7 @@ public class WordApp {
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				//[snip]
+				fw.paused.set(false);
 			}
 		});
 
@@ -139,17 +142,56 @@ public class WordApp {
         frame.setContentPane(g);     
        	//frame.pack();  // don't do this - packs it into small space
         frame.setVisible(true);
-
 		
 	}
 
     /**
-     * Reads in dictionary from input file
+     * Main Method
+     * @param args
+     */
+	public static void main(String[] args) {
+		String[] argsT = {"10", "5", "example_dict.txt"};
+		//deal with command line arguments
+		totalWords = Integer.parseInt(argsT[0]);  //total words to fall
+		noWords = Integer.parseInt(argsT[1]); // total words falling at any point
+		assert (totalWords >= noWords); // this could be done more neatly
+		String[] tmpDict = getDictFromFile(argsT[2]); //file of words
+		if (tmpDict != null)
+			dict = new WordDictionary(tmpDict);
+
+		WordRecord.dict = dict; //set the class dictionary for the words.
+
+		words = new WordRecord[noWords];  //shared array of current words
+
+		//[snip]
+
+		setupGUI(frameX, frameY, yLimit);
+		//Start WordPanel thread - for redrawing animation
+
+		int x_inc = (int) frameX / noWords;
+		//initialize shared array of current words
+
+		for (int i = 0; i < noWords; i++) {
+			words[i] = new WordRecord(dict.getNewWord(), i * x_inc, yLimit);
+		}
+
+		startFallingWords(words);
+
+	}
+
+	public static void startFallingWords(WordRecord[] wordRecord){
+		fw = new FallingWords(wordRecord);
+		Thread wordPanelThread = new Thread(fw);
+		wordPanelThread.start();
+	}
+
+	/**
+	 * Reads in dictionary from input file
      * If there is an error with input file, default dictionary will be used
      * @param filename
      * @return
-     */
-    public static String[] getDictFromFile(String filename) {
+	 */
+	public static String[] getDictFromFile(String filename) {
 		String [] dictStr = null;
 		try {
 			Scanner dictReader = new Scanner(new FileInputStream(filename));
@@ -163,42 +205,9 @@ public class WordApp {
 			}
 			dictReader.close();
 		} catch (IOException e) {
-	        System.err.println("Problem reading file " + filename + " default dictionary will be used");
-	    }
-		return dictStr;
-
-	}
-
-    /**
-     * Main Method
-     * @param args
-     */
-	public static void main(String[] args) {
-	    String[] argsT = {"10", "5", "example_dict.txt"};
-		//deal with command line arguments
-		totalWords=Integer.parseInt(argsT[0]);  //total words to fall
-		noWords=Integer.parseInt(argsT[1]); // total words falling at any point
-		assert(totalWords>=noWords); // this could be done more neatly
-		String[] tmpDict=getDictFromFile(argsT[2]); //file of words
-		if (tmpDict!=null)
-			dict= new WordDictionary(tmpDict);
-		
-		WordRecord.dict=dict; //set the class dictionary for the words.
-		
-		words = new WordRecord[noWords];  //shared array of current words
-		
-		//[snip]
-		
-		setupGUI(frameX, frameY, yLimit);  
-    	//Start WordPanel thread - for redrawing animation
-
-		int x_inc=(int)frameX/noWords;
-	  	//initialize shared array of current words
-
-		for (int i=0;i<noWords;i++) {
-			words[i]=new WordRecord(dict.getNewWord(),i*x_inc,yLimit);
+			System.err.println("Problem reading file " + filename + " default dictionary will be used");
 		}
-
+		return dictStr;
 
 	}
 

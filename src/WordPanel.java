@@ -4,6 +4,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -16,7 +17,6 @@ public class WordPanel extends JPanel implements Runnable {
     private WordRecord[] words;
     private int noWords;
     private int maxY;
-
 
     public void paintComponent(Graphics g) {
         int width = getWidth();
@@ -42,14 +42,24 @@ public class WordPanel extends JPanel implements Runnable {
      * @param maxY
      */
     WordPanel(WordRecord[] words, int maxY) {
-        this.words=words; //will this work?
+        this.words = words; //will this work?
         noWords = words.length;
-        done=false;
-        this.maxY=maxY;
+        done = false;
+        this.maxY = maxY;
     }
 
+    /**
+     * Run method
+     */
     public void run() {
-        //add in code to animate this
+        while (true) {
+            repaint();
+            try {
+                Thread.sleep(20);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }
