@@ -93,7 +93,8 @@ public class WordRecord {
 	}
 
     /**
-     *
+     * Reset word and replace it with another word from the dictionary
+	 * Word will be given new dropped status and falling speed
      */
 	public synchronized void resetWord() {
 		resetPos();
@@ -123,7 +124,7 @@ public class WordRecord {
      * Dropping the word in the Y-direction according to the magnitude of increment
      * @param inc number by which the word should fall
      */
-	public synchronized  void drop(int inc) {
+	public synchronized void drop(int inc) {
 		setY(y+inc);
 	}
 

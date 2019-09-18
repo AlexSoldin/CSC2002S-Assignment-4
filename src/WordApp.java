@@ -92,8 +92,7 @@ public class WordApp {
 			public void actionPerformed(ActionEvent e)
 			{
 				textEntry.requestFocus();  //return focus to the text entry field
-				done = true;
-				startFallingWords(words);
+				//startFallingWords(words);
 			}
 		});
 
@@ -142,6 +141,9 @@ public class WordApp {
         frame.setContentPane(g);     
        	//frame.pack();  // don't do this - packs it into small space
         frame.setVisible(true);
+
+        Thread wt = new Thread(w);
+        wt.start();
 		
 	}
 
