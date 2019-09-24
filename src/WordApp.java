@@ -31,7 +31,6 @@ public class WordApp {
 	static 	Score score = new Score();
 
 	static WordPanel w;
-	static FallingWords fw;
 
 
     /**
@@ -58,13 +57,13 @@ public class WordApp {
 	    
 	    JPanel txt = new JPanel();
 	    txt.setLayout(new BoxLayout(txt, BoxLayout.LINE_AXIS)); 
-	    JLabel caught =new JLabel("Caught: " + score.getCaught() + "    ");
-	    JLabel missed =new JLabel("Missed:" + score.getMissed()+ "    ");
-	    JLabel scr =new JLabel("Score:" + score.getScore()+ "    ");    
+	    JLabel caught = new JLabel("Caught:" + score.getCaught()+ "    ");
+	    JLabel missed = new JLabel("Missed:" + score.getMissed()+ "    ");
+	    JLabel scr = new JLabel("Score:" + score.getScore()+ "    ");
 	    txt.add(caught);
 	    txt.add(missed);
 	    txt.add(scr);
-    
+
 	    //[snip]
   
 	    final JTextField textEntry = new JTextField("",20);
@@ -72,7 +71,22 @@ public class WordApp {
 		{
 	      public void actionPerformed(ActionEvent evt) {
 	          String text = textEntry.getText();
-	          //[snip]
+
+			  for (int i = 0; i < words.length; i++) {
+				  if (words[i].matchWord(text)){
+				  	score.caughtWord(words[i].getWord().length());
+				  }
+			  }
+
+			  caught.setText("Caught:" + score.getCaught()+ "    ");
+			  missed.setText("Missed:" + score.getMissed()+ "    ");
+			  scr.setText("Score:" + score.getScore()+ "    ");
+
+//			  if (totalWords==score.getCaught()+score.getMissed()){
+//				  System.out.println("Done");
+//				  System.exit(0);
+//			  }
+
 	          textEntry.setText("");
 	          textEntry.requestFocus();
 	      }
@@ -84,48 +98,42 @@ public class WordApp {
 	    
 		JPanel b = new JPanel();
 		b.setLayout(new BoxLayout(b, BoxLayout.LINE_AXIS));
-		JButton resetB = new JButton("Reset");
 
-		// add the listener to the jbutton to handle the "pressed" event
+		JButton resetB = new JButton("Reset");
 		resetB.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				textEntry.requestFocus();  //return focus to the text entry field
-				//startFallingWords(words);
+				//score.resetScore();
 			}
 		});
 
 		JButton pauseB = new JButton("Pause");
-
-		// add the listener to the jbutton to handle the "pressed" event
 		pauseB.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				fw.paused.set(true);
+				w.paused.set(true);
 			}
 		});
 
 		JButton playB = new JButton("Play");
-
-		// add the listener to the jbutton to handle the "pressed" event
 		playB.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				fw.paused.set(false);
+				Thread wt = new Thread(w);
+				wt.start();
+				w.paused.set(false);
 			}
 		});
 
 		JButton endB = new JButton("End");
-
-		// add the listener to the jbutton to handle the "pressed" event
 		endB.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				//[snip]
+				//score.resetScore();
 			}
 		});
 
@@ -141,10 +149,6 @@ public class WordApp {
         frame.setContentPane(g);     
        	//frame.pack();  // don't do this - packs it into small space
         frame.setVisible(true);
-
-        Thread wt = new Thread(w);
-        wt.start();
-		
 	}
 
     /**
@@ -152,7 +156,7 @@ public class WordApp {
      * @param args
      */
 	public static void main(String[] args) {
-		String[] argsT = {"10", "5", "example_dict.txt"};
+		String[] argsT = {"10", "4", "example_dict.txt"};
 		//deal with command line arguments
 		totalWords = Integer.parseInt(argsT[0]);  //total words to fall
 		noWords = Integer.parseInt(argsT[1]); // total words falling at any point
@@ -168,6 +172,7 @@ public class WordApp {
 		//[snip]
 
 		setupGUI(frameX, frameY, yLimit);
+
 		//Start WordPanel thread - for redrawing animation
 
 		int x_inc = (int) frameX / noWords;
@@ -177,14 +182,6 @@ public class WordApp {
 			words[i] = new WordRecord(dict.getNewWord(), i * x_inc, yLimit);
 		}
 
-		startFallingWords(words);
-
-	}
-
-	public static void startFallingWords(WordRecord[] wordRecord){
-		fw = new FallingWords(wordRecord);
-		Thread wordPanelThread = new Thread(fw);
-		wordPanelThread.start();
 	}
 
 	/**

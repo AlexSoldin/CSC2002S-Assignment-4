@@ -17,6 +17,7 @@ public class WordPanel extends JPanel implements Runnable {
     private WordRecord[] words;
     private int noWords;
     private int maxY;
+    public static AtomicBoolean paused;
 
     public void paintComponent(Graphics g) {
         int width = getWidth();
@@ -46,6 +47,7 @@ public class WordPanel extends JPanel implements Runnable {
         noWords = words.length;
         done = false;
         this.maxY = maxY;
+        paused = new AtomicBoolean(false);
     }
 
     /**
@@ -53,7 +55,15 @@ public class WordPanel extends JPanel implements Runnable {
      */
     public void run() {
         while (true) {
-            repaint();
+            if (!paused.get()) {
+                System.out.println("Running");
+                for (int i = 0; i < words.length; i++) {
+                    words[i].drop(words[i].getSpeed()/(maxY*2));
+                    repaint();
+                }
+            } else {
+                System.out.println("Paused is: " + paused);
+            }
             try {
                 Thread.sleep(20);
             } catch (InterruptedException e) {
