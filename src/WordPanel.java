@@ -58,9 +58,9 @@ public class WordPanel extends JPanel implements Runnable {
             if (!paused.get()) {
                 System.out.println("Running");
                 for (int i = 0; i < words.length; i++) {
-                    words[i].drop(words[i].getSpeed()/(maxY*2));
-                    repaint();
+                    words[i].drop(Math.max(words[i].getSpeed()/250,1));
                 }
+                repaint();
             } else {
                 System.out.println("Paused is: " + paused);
             }

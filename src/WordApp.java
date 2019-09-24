@@ -104,7 +104,8 @@ public class WordApp {
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				//score.resetScore();
+				score.resetScore();
+
 			}
 		});
 
