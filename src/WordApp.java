@@ -13,7 +13,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 //model is separate from the view.
 
 public class WordApp {
-
     /**
      * Global Variables
      */
@@ -31,6 +30,7 @@ public class WordApp {
 	static 	Score score = new Score();
 
 	static WordPanel w;
+	static Completion completed = new Completion();
 
 	static JLabel caught;
 	static JLabel missed;
@@ -76,7 +76,6 @@ public class WordApp {
 		{
 	      public void actionPerformed(ActionEvent evt) {
 	          text = textEntry.getText();
-
 	          textEntry.setText("");
 	          textEntry.requestFocus();
 	      }
@@ -94,8 +93,7 @@ public class WordApp {
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				score.resetScore();
-				updateScores();
+				w.done = true;
 			}
 		});
 
@@ -123,8 +121,8 @@ public class WordApp {
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				score.resetScore();
-				updateScores();
+				w.done = true;
+				System.exit(0);
 			}
 		});
 
@@ -147,7 +145,7 @@ public class WordApp {
      * @param args
      */
 	public static void main(String[] args) {
-		String[] argsT = {"10", "4", "example_dict.txt"};
+		String[] argsT = {"10", "5", "example_dict.txt"};
 		//deal with command line arguments
 		totalWords = Integer.parseInt(argsT[0]);  //total words to fall
 		noWords = Integer.parseInt(argsT[1]); // total words falling at any point
@@ -160,14 +158,9 @@ public class WordApp {
 
 		words = new WordRecord[noWords];  //shared array of current words
 
-		//[snip]
-
 		setupGUI(frameX, frameY, yLimit);
 
-		//Start WordPanel thread - for redrawing animation
-
 		int x_inc = (int) frameX / noWords;
-
 
 		for (int i = 0; i < noWords; i++) {
 			words[i] = new WordRecord(dict.getNewWord(), i * x_inc, yLimit);
@@ -181,6 +174,9 @@ public class WordApp {
 	 */
 	public static void Start(){
 		done = false;
+
+		Thread completion = new Thread(completed);
+		completion.start();
 
 		Thread wt;
 

@@ -33,8 +33,7 @@ public class WordPanel extends JPanel implements Runnable {
         //draw the words
         //animation must be added
         for (int i = 0; i < noWords; i++) {
-            //g.drawString(words[i].getWord(),words[i].getX(),words[i].getY());
-            g.drawString(words[i].getWord(), words[i].getX(), words[i].getY() + 20);  //y-offset for skeleton so that you can see the words
+            g.drawString(words[i].getWord(),words[i].getX(),words[i].getY());
         }
 
     }
@@ -57,17 +56,17 @@ public class WordPanel extends JPanel implements Runnable {
      * Run method
      */
     public void run() {
-        //add in code to animate this
+
         done = false;
         WordRecord word = words[count];
-        System.out.println(word.getWord());
+        //System.out.println(word.getWord());
         count++;
 
         while (!done) {
 
             if(WordApp.score.getMissed()==WordApp.totalWords){
-                done=true;
-                Completion.done=true;
+                done = true;
+                Completion.done = true;
                 word.resetWord();
                 break;
             }
@@ -102,9 +101,10 @@ public class WordPanel extends JPanel implements Runnable {
                 count = 0;
             }
 
+            }
 
-            } else {
-              System.out.println("Paused is: " + paused);
+            else {
+              System.out.println("Paused");
             }
 
         }

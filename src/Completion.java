@@ -1,7 +1,6 @@
 import javax.swing.*;
 
 public class Completion implements Runnable{
-
     /**
      * Global Variables
      */
@@ -11,18 +10,19 @@ public class Completion implements Runnable{
      * Default Constructor
      */
     public Completion(){
-        done=false;
+        done = false;
     }
 
     /**
      * Run method
      */
     public void run() {
-        done=false;
+        done = false;
 
         while (true) {
             if (done) {
-                JOptionPane.showMessageDialog(null, "Unlucky son");
+                JOptionPane.showMessageDialog(null, "Game Over! \nYour score was "+WordApp.score.getScore()+
+                        "\nPress play to try again");
                 WordApp.score.resetScore();
                 WordApp.updateScores();
                 break;
