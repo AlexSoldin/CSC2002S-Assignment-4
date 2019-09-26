@@ -32,6 +32,11 @@ public class WordApp {
 
 	static WordPanel w;
 
+	static JLabel caught;
+	static JLabel missed;
+	static JLabel scr;
+
+	public static volatile String text;
 
     /**
      * Setup GUI screen
@@ -57,9 +62,9 @@ public class WordApp {
 	    
 	    JPanel txt = new JPanel();
 	    txt.setLayout(new BoxLayout(txt, BoxLayout.LINE_AXIS)); 
-	    JLabel caught = new JLabel("Caught:" + score.getCaught()+ "    ");
-	    JLabel missed = new JLabel("Missed:" + score.getMissed()+ "    ");
-	    JLabel scr = new JLabel("Score:" + score.getScore()+ "    ");
+	    caught = new JLabel("Caught:" + score.getCaught()+ "    ");
+	    missed = new JLabel("Missed:" + score.getMissed()+ "    ");
+	    scr = new JLabel("Score:" + score.getScore()+ "    ");
 	    txt.add(caught);
 	    txt.add(missed);
 	    txt.add(scr);
@@ -70,22 +75,9 @@ public class WordApp {
 	    textEntry.addActionListener(new ActionListener()
 		{
 	      public void actionPerformed(ActionEvent evt) {
-	          String text = textEntry.getText();
+	          text = textEntry.getText();
 
-			  for (int i = 0; i < words.length; i++) {
-				  if (words[i].matchWord(text)){
-				  	score.caughtWord(words[i].getWord().length());
-				  }
-			  }
 
-			  caught.setText("Caught:" + score.getCaught()+ "    ");
-			  missed.setText("Missed:" + score.getMissed()+ "    ");
-			  scr.setText("Score:" + score.getScore()+ "    ");
-
-//			  if (totalWords==score.getCaught()+score.getMissed()){
-//				  System.out.println("Done");
-//				  System.exit(0);
-//			  }
 
 	          textEntry.setText("");
 	          textEntry.requestFocus();
@@ -106,6 +98,8 @@ public class WordApp {
 			{
 				score.resetScore();
 
+				updateScores();
+
 			}
 		});
 
@@ -123,8 +117,7 @@ public class WordApp {
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				Thread wt = new Thread(w);
-				wt.start();
+				Start();
 				w.paused.set(false);
 			}
 		});
@@ -134,7 +127,8 @@ public class WordApp {
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				//score.resetScore();
+				score.resetScore();
+				updateScores();
 			}
 		});
 
@@ -177,12 +171,40 @@ public class WordApp {
 		//Start WordPanel thread - for redrawing animation
 
 		int x_inc = (int) frameX / noWords;
-		//initialize shared array of current words
+
 
 		for (int i = 0; i < noWords; i++) {
 			words[i] = new WordRecord(dict.getNewWord(), i * x_inc, yLimit);
 		}
 
+	}
+
+	/**
+	 * Method to start the game by calling multiple WordPanel threads
+	 * This calls the run method in the WordPanel class
+	 */
+	public static void Start(){
+		done = false;
+
+		for (int i = 0; i < noWords; i++) {
+			Thread wt = new Thread(w);
+			wt.start();
+
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	/**
+	 * Updates the value of the JLabels keeping the caught, missed and score variables
+	 */
+	public static void updateScores(){
+		caught.setText("Caught:" + score.getCaught()+ "    ");
+		missed.setText("Missed:" + score.getMissed()+ "    ");
+		scr.setText("Score:" + score.getScore()+ "    ");
 	}
 
 	/**
