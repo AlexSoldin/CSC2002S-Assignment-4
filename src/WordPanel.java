@@ -24,23 +24,24 @@ public class WordPanel extends JPanel implements Runnable {
     public void paintComponent(Graphics g) {
         int width = getWidth();
         int height = getHeight();
-        g.clearRect(0,0,width,height);
+        g.clearRect(0, 0, width, height);
         g.setColor(Color.red);
-        g.fillRect(0,maxY-10,width,height);
+        g.fillRect(0, maxY - 10, width, height);
 
         g.setColor(Color.black);
         g.setFont(new Font("Helvetica", Font.PLAIN, 26));
-       //draw the words
-       //animation must be added
-        for (int i=0;i<noWords;i++){
+        //draw the words
+        //animation must be added
+        for (int i = 0; i < noWords; i++) {
             //g.drawString(words[i].getWord(),words[i].getX(),words[i].getY());
-            g.drawString(words[i].getWord(),words[i].getX(),words[i].getY()+20);  //y-offset for skeleton so that you can see the words
+            g.drawString(words[i].getWord(), words[i].getX(), words[i].getY() + 20);  //y-offset for skeleton so that you can see the words
         }
 
-      }
+    }
 
     /**
      * Parameterised Constructor
+     *
      * @param words
      * @param maxY
      */
@@ -56,52 +57,52 @@ public class WordPanel extends JPanel implements Runnable {
      * Run method
      */
     public void run() {
-    //add in code to animate this
+        //add in code to animate this
+        done = false;
         WordRecord word = words[count];
         System.out.println(word.getWord());
         count++;
 
         while (!done) {
             if (!paused.get()) {
-                System.out.println("Running");
-                for (int i = 0; i < words.length; i++) {
+            System.out.println("Running");
 
-                    words[i].drop(10);
+            word.drop(10);
 
-                    try {
-                        Thread.sleep(words[i].getSpeed() );
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    repaint();
+            try {
+                Thread.sleep(word.getSpeed());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            repaint();
 
-                    if (word.dropped()==true){
-                        word.resetWord();
-                        WordApp.score.missedWord();
-                        WordApp.updateScores();
-                    }
+//            String text = WordApp.text;
+//            if (text.equals(word.getWord())) {
+//                WordApp.score.caughtWord(word.getWord().length());
+//                word.resetWord();
+//                WordApp.updateScores();
+//            }
 
-                    String typed = WordApp.text;
-                    if (typed.equals(word.getWord())){
-                        WordApp.score.caughtWord(typed.length());
-                        word.resetWord();
-                        WordApp.updateScores();
-                    }
+            if (word.dropped()) {
+                word.resetWord();
+                WordApp.score.missedWord();
+                WordApp.updateScores();
+            }
 
-                    if(done){
-                        word.resetWord();
-                        count = 0;
-                    }
+            if (done) {
+                word.resetWord();
+                count = 0;
+            }
 
-                }
 
             } else {
-                System.out.println("Paused is: " + paused);
+              System.out.println("Paused is: " + paused);
             }
 
         }
     }
-
 }
+
+
 
 

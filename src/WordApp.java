@@ -77,8 +77,6 @@ public class WordApp {
 	      public void actionPerformed(ActionEvent evt) {
 	          text = textEntry.getText();
 
-
-
 	          textEntry.setText("");
 	          textEntry.requestFocus();
 	      }
@@ -97,9 +95,7 @@ public class WordApp {
 			public void actionPerformed(ActionEvent e)
 			{
 				score.resetScore();
-
 				updateScores();
-
 			}
 		});
 
@@ -186,8 +182,10 @@ public class WordApp {
 	public static void Start(){
 		done = false;
 
+		Thread wt;
+
 		for (int i = 0; i < noWords; i++) {
-			Thread wt = new Thread(w);
+			wt = new Thread(w);
 			wt.start();
 
 			try {
