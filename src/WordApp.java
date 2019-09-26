@@ -36,7 +36,7 @@ public class WordApp {
 	static JLabel missed;
 	static JLabel scr;
 
-	public static volatile String text;
+	public static volatile String text = "";
 
     /**
      * Setup GUI screen
@@ -189,7 +189,7 @@ public class WordApp {
 			wt.start();
 
 			try {
-				Thread.sleep(1);
+				Thread.sleep(10);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

@@ -64,6 +64,14 @@ public class WordPanel extends JPanel implements Runnable {
         count++;
 
         while (!done) {
+
+            if(WordApp.score.getMissed()==WordApp.totalWords){
+                done=true;
+                Completion.done=true;
+                word.resetWord();
+                break;
+            }
+
             if (!paused.get()) {
             System.out.println("Running");
 
@@ -76,16 +84,16 @@ public class WordPanel extends JPanel implements Runnable {
             }
             repaint();
 
-//            String text = WordApp.text;
-//            if (text.equals(word.getWord())) {
-//                WordApp.score.caughtWord(word.getWord().length());
-//                word.resetWord();
-//                WordApp.updateScores();
-//            }
-
             if (word.dropped()) {
                 word.resetWord();
                 WordApp.score.missedWord();
+                WordApp.updateScores();
+            }
+
+            String text = WordApp.text;
+            if(text.equals(word.getWord())){
+                WordApp.score.caughtWord(word.getWord().length());
+                word.resetWord();
                 WordApp.updateScores();
             }
 
