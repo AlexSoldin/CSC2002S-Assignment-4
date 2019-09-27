@@ -93,7 +93,7 @@ public class WordApp {
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				w.done = true;
+				Reset();
 			}
 		});
 
@@ -102,7 +102,7 @@ public class WordApp {
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				w.paused.set(true);
+				w.paused = true;
 			}
 		});
 
@@ -112,16 +112,17 @@ public class WordApp {
 			public void actionPerformed(ActionEvent e)
 			{
 				Start();
-				w.paused.set(false);
+				w.paused = false;
 			}
 		});
 
-		JButton endB = new JButton("End");
-		endB.addActionListener(new ActionListener()
+		JButton quitB = new JButton("Quit");
+		quitB.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
 				w.done = true;
+				System.out.println("Quit Successful");
 				System.exit(0);
 			}
 		});
@@ -129,7 +130,7 @@ public class WordApp {
 		b.add(resetB);
 		b.add(pauseB);
 		b.add(playB);
-		b.add(endB);
+		b.add(quitB);
 		
 		g.add(b);
     	
@@ -166,6 +167,17 @@ public class WordApp {
 			words[i] = new WordRecord(dict.getNewWord(), i * x_inc, yLimit);
 		}
 
+	}
+
+	/**
+	 * Method to reset the game
+	 * Clears the GUI screen and resets the scores
+	 */
+	public static void Reset(){
+		w.paused = false;
+		w.done = true;
+		score.resetScore();
+		updateScores();
 	}
 
 	/**
