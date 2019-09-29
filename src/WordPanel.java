@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Font;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.JPanel;
 
@@ -13,7 +14,7 @@ public class WordPanel extends JPanel implements Runnable {
     private int noWords;
     private int maxY;
     private int count;
-    public static volatile boolean paused;
+    public static AtomicBoolean paused;
 
     public void paintComponent(Graphics g) {
         int width = getWidth();
@@ -43,7 +44,7 @@ public class WordPanel extends JPanel implements Runnable {
         noWords = words.length;
         done = false;
         this.maxY = maxY;
-        paused = false;
+        paused  = new AtomicBoolean(false);
     }
 
     /**
@@ -58,15 +59,15 @@ public class WordPanel extends JPanel implements Runnable {
 
         while (!done) {
 
-            if(WordApp.score.getMissed()==WordApp.totalWords){
+            if(WordApp.score.getTotal()==WordApp.totalWords){
                 done = true;
                 Completion.done = true;
                 word.resetWord();
                 break;
             }
 
-            if (!paused) {
-            System.out.println("Running");
+            if (!paused.get()) {
+            //System.out.println("Running");
 
             word.drop(10);
 
@@ -97,9 +98,10 @@ public class WordPanel extends JPanel implements Runnable {
                 count = 0;
             }
 
-            } else {
-              System.out.println("Paused");
             }
+            //else {
+              //System.out.println("Paused");
+            //}
 
         }
     }

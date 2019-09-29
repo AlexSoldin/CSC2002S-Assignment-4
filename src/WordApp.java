@@ -68,8 +68,6 @@ public class WordApp {
 	    txt.add(caught);
 	    txt.add(missed);
 	    txt.add(scr);
-
-	    //[snip]
   
 	    final JTextField textEntry = new JTextField("",20);
 	    textEntry.addActionListener(new ActionListener()
@@ -102,7 +100,7 @@ public class WordApp {
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				w.paused = true;
+				w.paused.set(true);
 			}
 		});
 
@@ -112,7 +110,7 @@ public class WordApp {
 			public void actionPerformed(ActionEvent e)
 			{
 				Start();
-				w.paused = false;
+                w.paused.set(false);
 			}
 		});
 
@@ -146,12 +144,12 @@ public class WordApp {
      * @param args
      */
 	public static void main(String[] args) {
-		String[] argsT = {"10", "5", "example_dict.txt"};
+		//String[] argsT = {"10", "5", "example_dict.txt"};
 		//deal with command line arguments
-		totalWords = Integer.parseInt(argsT[0]);  //total words to fall
-		noWords = Integer.parseInt(argsT[1]); // total words falling at any point
+		totalWords = Integer.parseInt(args[0]);  //total words to fall
+		noWords = Integer.parseInt(args[1]); // total words falling at any point
 		assert (totalWords >= noWords); // this could be done more neatly
-		String[] tmpDict = getDictFromFile(argsT[2]); //file of words
+		String[] tmpDict = getDictFromFile(args[2]); //file of words
 		if (tmpDict != null)
 			dict = new WordDictionary(tmpDict);
 
@@ -174,7 +172,7 @@ public class WordApp {
 	 * Clears the GUI screen and resets the scores
 	 */
 	public static void Reset(){
-		w.paused = false;
+        w.paused.set(false);
 		w.done = true;
 		score.resetScore();
 		updateScores();
