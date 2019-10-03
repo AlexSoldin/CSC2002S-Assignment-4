@@ -12,4 +12,3 @@ words to fall.
 
 Some commands pertaining to the Makefile include:
 'make' - compiles programs
-'make run' - run the main method WordApp.java
